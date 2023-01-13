@@ -10,7 +10,9 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'body', 'slug'];
+
+    /* ⚡ Add cover_image to fillable to avoid image path not saved in the db! */
+    protected $fillable = ['title', 'body', 'slug', 'cover_image'];
 
     public static function generateSlug($title)
     {

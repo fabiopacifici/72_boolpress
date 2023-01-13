@@ -23,6 +23,8 @@ class PostSeeder extends Seeder
             $post = new Post();
             $post->title = $faker->sentence(3);
             $post->slug = Str::slug($post->title, '-');
+            //$post->cover_image = $faker->imageUrl(600, 300, 'Post', false, false); //https://placeholders.com/myimage.png
+            $post->cover_image = 'placeholders/' . $faker->image('storage/app/public/placeholders', 600, 300, 'Post', false, false); //placeholders/sjfdposjadfgpojsdpfo.png
             $post->body = $faker->text(300);
             $post->save();
         }

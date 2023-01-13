@@ -22,6 +22,7 @@
         <thead class="table-light">
             <tr>
                 <th>ID</th>
+                <th>Cover Image</th>
                 <th>Title</th>
                 <th>Slug</th>
                 <th>Actions</th>
@@ -31,6 +32,15 @@
             @forelse ($posts as $post)
             <tr class="table-primary">
                 <td scope="row">{{$post->id}}</td>
+                <td>
+
+                    @if($post->cover_image)
+                    <img width="140" class="img-fluid" src="{{asset('storage/' . $post->cover_image)}}" alt="">
+                    @else
+                    <div class="placeholder p-5 bg-secondary d-flex align-items-center justify-content-center" style="width:140px">Placeholder</div>
+                    @endif
+
+                </td>
                 <td>{{$post->title}}</td>
                 <td>{{$post->slug}}</td>
                 <td>

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
-
+use Illuminate\Support\Facades\Storage;
 
 
 class PostController extends Controller
@@ -41,9 +41,17 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-
+        //dd($request->all());
         //validate data
         $val_data = $request->validated();
+        //dd($val_data);
+        // Save the input cover_image
+        if ($request->hasFile('cover_image')) {
+            $cover_image = Storage::put('uploads', $val_data['cover_image']);
+            //dd($cover_image);
+            // replace the value of cover_image inside $val_data
+            $val_data['cover_image'] = $cover_image;
+        }
         // generate post slug
         $post_slug = Post::generateSlug($val_data['title']);
         $val_data['slug'] = $post_slug;
@@ -85,9 +93,25 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
+        //dd($request->all());
+
         // validate data
         $val_data = $request->validated();
-        dd($val_data);
+        //dd($val_data);
+
+        // check if the request has a cover_image field
+        if ($request->hasFile('cover_image')) {
+            // check if the current post has an image if yes, delete it
+            if ($post->cover_image) {
+                Storage::delete($post->cover_image);
+            }
+            $cover_image = Storage::put('uploads', $val_data['cover_image']);
+            //dd($cover_image);
+            // replace the value of cover_image inside $val_data
+            $val_data['cover_image'] = $cover_image;
+        }
+        //dd($val_data);
+
         // update the slug
         $post_slug = Post::generateSlug($val_data['title']);
         $val_data['slug'] = $post_slug;
@@ -106,6 +130,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if ($post->cover_image) {
+            Storage::delete($post->cover_image);
+        }
+
         $post->delete();
         return to_route('admin.posts.index')->with('message', 'Post Deleted successfully');
     }
