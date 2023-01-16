@@ -12,7 +12,7 @@ class Post extends Model
 
 
     /* ⚡ Add cover_image to fillable to avoid image path not saved in the db! */
-    protected $fillable = ['title', 'body', 'slug', 'cover_image', 'category_id'];
+    protected $fillable = ['title', 'body', 'slug', 'cover_image', 'category_id', 'user_id'];
 
     public static function generateSlug($title)
     {
@@ -32,4 +32,14 @@ class Post extends Model
     }
 
 
+
+    /**
+     * Get the user that owns the Post
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

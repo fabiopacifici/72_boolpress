@@ -69,6 +69,20 @@
                                     Posts
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="">
+                                    <span data-feather="file" class="align-text-bottom"></span>
+                                    <i class="fas fa-folder fa-sm fa-fw"></i>
+                                    Categories
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="">
+                                    <span data-feather="file" class="align-text-bottom"></span>
+                                    <i class="fas fa-bookmark fa-sm fa-fw"></i>
+                                    Tags
+                                </a>
+                            </li>
                         </ul>
 
 

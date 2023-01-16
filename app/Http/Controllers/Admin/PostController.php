@@ -8,7 +8,7 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -20,7 +20,9 @@ class PostController extends Controller
     public function index()
     {
 
-        $posts = Post::orderByDesc('id')->get();
+        //$posts = Post::orderByDesc('id')->get();
+        $posts = Auth::user()->posts;
+        //dd(Auth::user()->posts);
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -44,7 +46,7 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //dd($request->all());
+        //dd($request->all(), Auth::id());
         //validate data
         $val_data = $request->validated();
         //dd($val_data);
@@ -59,10 +61,15 @@ class PostController extends Controller
         $post_slug = Post::generateSlug($val_data['title']);
         $val_data['slug'] = $post_slug;
         // create posts
+
+        // assign the current post to the authenticated user
+        $val_data['user_id'] = Auth::id();
+
         //dd($val_data);
-        Post::create($val_data);
+
+        $post = Post::create($val_data);
         // redirect
-        return to_route('admin.posts.index')->with('message', 'Posts added successfully');
+        return to_route('admin.posts.index')->with('message', "Posts id: $post->id added successfully");
     }
 
     /**
@@ -99,6 +106,8 @@ class PostController extends Controller
     {
         //dd($request->all());
 
+
+        /* TODO: Allow only the current user to edit a post */
         // validate data
         $val_data = $request->validated();
         //dd($val_data);
@@ -123,7 +132,7 @@ class PostController extends Controller
         // update the resource
         $post->update($val_data);
         // redirect to a get route
-        return to_route('admin.posts.index')->with('message', 'Post updated successfully');
+        return to_route('admin.posts.index')->with('message', "Post id: $post->id updated successfully");
     }
 
     /**
@@ -134,6 +143,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        /* TODO: Allow only the current user to delete a post */
+
         if ($post->cover_image) {
             Storage::delete($post->cover_image);
         }
