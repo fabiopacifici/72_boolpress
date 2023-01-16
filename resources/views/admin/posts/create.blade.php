@@ -32,12 +32,6 @@
     </div>
     @enderror
 
-
-    <div class="mb-3">
-        <label for="cover_image" class="form-label">Cover Image</label>
-        <input type="file" name="cover_image" id="cover_image" class="form-control  @error('cover_image') is-invalid @enderror" placeholder="" aria-describedby="coverImageHelper">
-        <small id="coverImageHelper" class="text-muted">Add your cover image</small>
-    </div>
     @error('cover_image')
     <div class="alert alert-danger" role="alert">
         {{$message}}
