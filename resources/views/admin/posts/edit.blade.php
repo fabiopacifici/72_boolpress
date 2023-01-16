@@ -40,6 +40,33 @@
             <small id="coverImageHelper" class="text-muted">Replace the post cover image</small>
         </div>
     </div>
+    <!-- TODO: Add validation errors -->
+
+
+    <div class="mb-3">
+        <label for="category_id" class="form-label">Categories</label>
+        <select class="form-select form-select-lg @error('category_id') 'is-invalid' @enderror" name="category_id" id="category_id">
+            <option value="">Delect category</option>
+
+            <!--
+                TODO: Fix Attempt to read property "id" on null
+                When a post has been updated and its category is Null
+            -->
+            @foreach ($categories as $category )
+            <option value="{{$category->id}}" {{ $category->id == old('category_id', $post->category->id) ? 'selected' : '' }}>
+                {{$category->name}}
+            </option>
+            @endforeach
+
+        </select>
+    </div>
+    @error('category_id')
+    <div class="alert alert-danger" role="alert">
+        {{$message}}
+    </div>
+    @enderror
+
+
 
     <div class="mb-3">
         <label for="body" class="form-label">Body</label>

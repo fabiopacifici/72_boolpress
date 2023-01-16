@@ -32,11 +32,39 @@
     </div>
     @enderror
 
+
+    <div class="mb-3">
+
+        <label for="cover_image" class="form-label">Cover Image</label>
+        <input type="file" name="cover_image" id="cover_image" class="form-control  @error('cover_image') is-invalid @enderror" placeholder="" aria-describedby="coverImageHelper">
+        <small id="coverImageHelper" class="text-muted">Add the post cover image</small>
+
+    </div>
     @error('cover_image')
     <div class="alert alert-danger" role="alert">
         {{$message}}
     </div>
     @enderror
+
+
+
+    <div class="mb-3">
+        <label for="category_id" class="form-label">Categories</label>
+        <select class="form-select form-select-lg @error('category_id') 'is-invalid' @enderror" name="category_id" id="category_id">
+            <option selected>Select one</option>
+
+            @foreach ($categories as $category )
+            <option value="{{$category->id}}" {{ old('category_id') ? 'selected' : '' }}>{{$category->name}}</option>
+            @endforeach
+
+        </select>
+    </div>
+    @error('category_id')
+    <div class="alert alert-danger" role="alert">
+        {{$message}}
+    </div>
+    @enderror
+
 
     <div class="mb-3">
         <label for="body" class="form-label">Body</label>
