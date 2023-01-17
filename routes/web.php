@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,12 @@ Route::middleware(['auth', 'verified'])->name('admin.')->prefix('admin')->group(
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('posts', PostController::class)->parameters([
         'posts' => 'post:slug'
+    ]);
+
+    Route::resource('categories', CategoryController::class)->parameters([
+        'categories' => 'category:slug'
+    ])->except([
+        'show', 'create', 'edit'
     ]);
 });
 
