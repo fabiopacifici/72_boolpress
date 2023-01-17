@@ -7,6 +7,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,8 +35,9 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $tags = Tag::all();
         //dd($categories);
-        return view('admin.posts.create', compact('categories'));
+        return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     /**
@@ -46,6 +48,7 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
+        //dd($request->all());
         //dd($request->all(), Auth::id());
         //validate data
         $val_data = $request->validated();
@@ -56,10 +59,14 @@ class PostController extends Controller
             //dd($cover_image);
             // replace the value of cover_image inside $val_data
             $val_data['cover_image'] = $cover_image;
+            // Oppure!
+            // $request->merge(['cover_image', $cover_image]);
         }
         // generate post slug
         $post_slug = Post::generateSlug($val_data['title']);
         $val_data['slug'] = $post_slug;
+         // Oppure!
+            // $request->merge(['slug', $slug]);
         // create posts
 
         // assign the current post to the authenticated user
@@ -68,6 +75,12 @@ class PostController extends Controller
         //dd($val_data);
 
         $post = Post::create($val_data);
+        // oppure
+        // Post::create($request->validated());
+
+        if ($request->has('tags')) {
+            $post->tags()->attach($val_data['tags']);
+        }
         // redirect
         return to_route('admin.posts.index')->with('message', "Posts id: $post->id added successfully");
     }
@@ -92,7 +105,9 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -131,6 +146,12 @@ class PostController extends Controller
         //dd($val_data);
         // update the resource
         $post->update($val_data);
+
+        if ($request->has('tags')) {
+            $post->tags()->sync($val_data['tags']);
+        } else {
+            $post->tags()->sync([]);
+        }
         // redirect to a get route
         return to_route('admin.posts.index')->with('message', "Post id: $post->id updated successfully");
     }
