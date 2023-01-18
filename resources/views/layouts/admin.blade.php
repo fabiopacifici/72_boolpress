@@ -77,7 +77,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " href="">
+                                <a class="nav-link {{ Route::currentRouteName() === 'admin.tags.index' ? 'active' : '' }}" href="{{route('admin.tags.index')}}">
                                     <span data-feather="file" class="align-text-bottom"></span>
                                     <i class="fas fa-bookmark fa-sm fa-fw"></i>
                                     Tags

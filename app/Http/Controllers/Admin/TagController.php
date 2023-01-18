@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
-use Illuminate\Http\Request;
-
+use App\Http\Requests\StoreTagRequest;
+use App\Http\Requests\UpdateTagRequest;
 class TagController extends Controller
 {
     /**
@@ -15,62 +15,56 @@ class TagController extends Controller
      */
     public function index()
     {
-        //
+        $tags = Tag::all();
+
+        return view('admin.tags.index', compact('tags'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\StoreTagRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTagRequest $request)
     {
         //
+
+        //dd($request->all());
+
+        // validate
+        $val_data = $request->validated();
+
+        $val_data['slug'] = Str::slug($request->name);
+        // save
+        $tag = Tag::create($val_data);
+
+        // redirect
+        return back()->with('message', "Tag $tag->slug created successfully");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Tag $tag)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tag $tag)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UpdateTagRequest  $request
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(UpdateTagRequest $request, Tag $tag)
     {
-        //
+
+        //validate data
+        $val_data = $request->validated();
+        $val_data['slug'] = Str::slug($request->name);
+        // save
+        $tag->update($val_data);
+
+        // redirect
+        return back()->with('message', "Tag $tag->slug updated successfully");
     }
 
     /**
@@ -81,6 +75,7 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-        //
+        $tag->delete();
+        return to_route('admin.tags.index')->with('message', "Tag $tag->slug Deleted successfully");
     }
 }
