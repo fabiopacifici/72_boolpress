@@ -72,16 +72,14 @@
         <label for="tags" class="form-label">Tags</label>
         <select multiple class="form-select form-select-sm" name="tags[]" id="tags">
             <option value="" disabled>Select a tag</option>
-            @forelse ($tags as $tag)
 
-            @if ($errors->any())
+
+            @forelse ($tags as $tag)
             <option value="{{$tag->id}}" {{ in_array($tag->id, old('tags', [])) ? 'selected' : '' }}>{{$tag->name}}</option>
-            @else
-            <option value="{{$tag->id}}">{{$tag->name}}</option>
-            @endif
             @empty
             <option value="" disabled>Sorry 😥 no tags in the system</option>
             @endforelse
+
         </select>
     </div>
 
