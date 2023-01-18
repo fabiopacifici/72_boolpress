@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+
 class CategoryController extends Controller
 {
     /**
@@ -21,15 +23,7 @@ class CategoryController extends Controller
         return view('admin.categories.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -44,35 +38,17 @@ class CategoryController extends Controller
         //dd($request->all());
 
         // validate
-        $request->merge(['slug' => Str::slug($request->name)]);
+        $val_data = $request->validated();
+
+        $val_data['slug'] = Str::slug($request->name);
         // save
-        dd($request->validated());
-        Category::create($request->validated());
+        $category = Category::create($val_data);
 
         // redirect
+        return back()->with('message', "Category $category->slug created successfully");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Category $category)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -81,9 +57,17 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+
+        //validate data
+        $val_data = $request->validated();
+        $val_data['slug'] = Str::slug($request->name);
+        // save
+        $category->update($val_data);
+
+        // redirect
+        return back()->with('message', "Category $category->slug updated successfully");
     }
 
     /**
@@ -94,6 +78,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return to_route('admin.categories.index')->with('message', "Category $category->slug Deleted successfully");
     }
 }

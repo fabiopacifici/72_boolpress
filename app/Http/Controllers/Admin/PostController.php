@@ -48,36 +48,28 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //dd($request->all());
-        //dd($request->all(), Auth::id());
+
         //validate data
         $val_data = $request->validated();
         //dd($val_data);
         // Save the input cover_image
         if ($request->hasFile('cover_image')) {
-            $cover_image = Storage::put('uploads', $val_data['cover_image']);
+            $cover_image = Storage::put('uploads', $request->cover_image);
             //dd($cover_image);
             // replace the value of cover_image inside $val_data
             $val_data['cover_image'] = $cover_image;
-            // Oppure!
-            // $request->merge(['cover_image', $cover_image]);
         }
         // generate post slug
-        $post_slug = Post::generateSlug($val_data['title']);
+        $post_slug = Post::generateSlug($request->title);
         $val_data['slug'] = $post_slug;
-         // Oppure!
-            // $request->merge(['slug', $slug]);
-        // create posts
 
         // assign the current post to the authenticated user
         $val_data['user_id'] = Auth::id();
 
-        //dd($val_data);
-
+        // create posts
         $post = Post::create($val_data);
-        // oppure
-        // Post::create($request->validated());
 
+        // attach the selected tags
         if ($request->has('tags')) {
             $post->tags()->attach($val_data['tags']);
         }
@@ -119,8 +111,6 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //dd($request->all());
-
 
         /* TODO: Allow only the current user to edit a post */
         // validate data
