@@ -98,6 +98,8 @@
 
         </tfoot>
     </table>
+    <!-- TODO: fix style -->
+    {{$posts->links()}}
 </div>
 
 

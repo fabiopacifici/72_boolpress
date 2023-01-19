@@ -22,7 +22,7 @@ class PostController extends Controller
     {
 
         //$posts = Post::orderByDesc('id')->get();
-        $posts = Auth::user()->posts;
+        $posts = Auth::user()->posts()->paginate(5);
         //dd(Auth::user()->posts);
         return view('admin.posts.index', compact('posts'));
     }
