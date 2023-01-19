@@ -2,14 +2,17 @@
 
 @section('content')
 
-<h1>Posts</h1>
+<div class="page-top d-flex justify-content-between">
+    <h1>Posts</h1>
+    <a class="btn btn-primary m-3" href="{{route('admin.posts.create')}}" role="button">
+        Add Post <i class="fas fa-plus fa-sm fa-fw"></i>
+    </a>
+</div>
 <!-- TODO: move in a partial -->
 @include('partials.session-message')
 @include('partials.errors')
 
-<a class="btn btn-primary position-fixed bottom-0 end-0 m-3" href="{{route('admin.posts.create')}}" role="button">
-    <i class="fas fa-plus fa-lg fa-fw"></i>
-</a>
+
 <div class="table-responsive">
     <table class="table table-striped
     table-hover
@@ -99,7 +102,9 @@
         </tfoot>
     </table>
     <!-- TODO: fix style -->
-    {{$posts->links()}}
+    {{$posts->links('vendor.pagination.bootstrap-5')}}
+
+
 </div>
 
 
